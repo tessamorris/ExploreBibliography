@@ -5,7 +5,7 @@ import pandas as pd # install pandas
 parser = bibtex.Parser()
 bibdata = parser.parse_file("references.bib")
 
-# Generate a temporary pandas database 
+# Generate a dataframe of all of the entries in the dataframe 
 for bib_id in bibdata.entries:
     b = bibdata.entries[bib_id].fields
     try:
@@ -37,4 +37,6 @@ for bib_id in bibdata.entries:
     except(KeyError):
         continue
 
+# Save the references csv. 
 ref_df.to_csv(r'refs.csv')
+
