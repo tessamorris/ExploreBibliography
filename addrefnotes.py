@@ -26,15 +26,22 @@ def checkFileExistence(file):
         print(file + " does not exist.")
     return output_exists
 
+# Get the current day and time
+[current_datetime, current_date, current_time] = getTimeDay("Add references")
+
 # Check the existance of a literature notes file summary
 bibnotesfile = "bibnotes.csv"
 bibnotes_exist = checkFileExistence(bibnotesfile)
+if bibnotes_exist:
+    bibnotes_df = pd.read_csv(bibnotesfile)
 
 # Check the existance of a literature notes file summary
 reffile = "refs.csv"
 refs_exist = checkFileExistence(reffile)
 if refs_exist:
     refs_df = pd.read_csv(reffile)
+else:
+    print('Need to add functionality to create references file.')
 
 enteredinput = False
 while not enteredinput:
@@ -63,13 +70,35 @@ if howadd == 0:
         newentry_exist = checkFileExistence(newentryfile)
     # Load the new entry file
     newentry_df = pd.read_csv(newentryfile)
-    # Get the number of new entries 
-    numentry = len(newentry_df.index)
-    for biben in newentry_df['BibTexKey']:
-        print(biben)
-        cross_df = refs_df[refs_df['BibTexKey'] == biben]
-        print(cross_df)
 
+    # Loop through the current data 
+    for biben in newentry_df['BibTexKey']:
+        # Get all of the references information from the ref.csv
+        cross_df = refs_df[refs_df['BibTexKey'] == biben]
+        if not cross_df.empty:
+            # Store all the current notes for the bibtex key
+            current_df = newentry_df[newentry_df['BibTexKey'] == biben]
+            # Convert to list 
+            cat_list = current_df['Category'].tolist()
+            notes_list = current_df['Notes'].tolist()
+            quote_list = current_df['Quote'].tolist()
+            numentry = len(current_df.index)
+
+            for b in range(numentry):
+                # Add entry to df
+                d = {'DateAdded': [current_date], 'BibTexKey': [biben],
+                 'Title': cross_df['Title'], 'Year':cross_df['Year'], 
+                 'FirstAuthor': cross_df['FirstAuthor'], 'Category': [cat_list[b]],
+                 'Notes':[notes_list[b]], 'Quote':[quote_list[b]]}
+                tempnotes_df = pd.DataFrame(data=d)
+                
+                if "bibnotes_df" in locals():
+                    # Add entry to df 
+                    bibnotes_df = bibnotes_df.append(tempnotes_df, ignore_index = True)
+                else:
+                    bibnotes_df = tempnotes_df
+        else:
+             print(biben + ' entry does not exist in references database.')
 
 # # Create the new mood in a dataframe 
 # mood_dfnew = pd.DataFrame({'Moods': [current_mood]})    
