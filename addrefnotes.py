@@ -33,7 +33,8 @@ bibnotes_exist = checkFileExistence(bibnotesfile)
 # Check the existance of a literature notes file summary
 reffile = "refs.csv"
 refs_exist = checkFileExistence(reffile)
-
+if refs_exist:
+    refs_df = pd.read_csv(reffile)
 
 enteredinput = False
 while not enteredinput:
@@ -53,6 +54,33 @@ while not enteredinput:
         if howadd == 0 or howadd == 1:
             enteredinput = True 
 
+# CSV option first
+if howadd == 0:
+    # Load the file 
+    newentry_exist = False
+    while not newentry_exist:
+        newentryfile = input("What is the name of your new entry CSV file (include .csv): ")
+        newentry_exist = checkFileExistence(newentryfile)
+    # Load the new entry file
+    newentry_df = pd.read_csv(newentryfile)
+    # Get the number of new entries 
+    numentry = len(newentry_df.index)
+    for biben in newentry_df['BibTexKey']:
+        print(biben)
+        cross_df = refs_df[refs_df['BibTexKey'] == biben]
+        print(cross_df)
+
+
+# # Create the new mood in a dataframe 
+# mood_dfnew = pd.DataFrame({'Moods': [current_mood]})    
+# # Append the data frame with the new data
+# mood_df = mood_df.append(mood_dfnew, ignore_index=True)
+# # Sort the moods alphabetically 
+# mood_df = mood_df.sort_values(by=['Moods'])
+# # Remove the old indexes
+# mood_df = mood_df.reset_index(drop=True)
+# # Export the csv file 
+# mood_df.to_csv(r'moods.csv')  
 # Add many paper to categories 
 # Add notes to paper 
 # Browse through cateogires
