@@ -34,12 +34,20 @@ bibnotesfile = "bibnotes.csv"
 bibnotes_exist = checkFileExistence(bibnotesfile)
 if bibnotes_exist:
     bibnotes_df = pd.read_csv(bibnotesfile)
+    # Remove the first column, which is old indices 
+    bibnotes_df = bibnotes_df[bibnotes_df.columns[1:]]
+    # Remove the old indexes
+    bibnotes_df = bibnotes_df.reset_index(drop=True)
 
 # Check the existance of a literature notes file summary
 reffile = "refs.csv"
 refs_exist = checkFileExistence(reffile)
 if refs_exist:
     refs_df = pd.read_csv(reffile)
+    # Remove the first column, which is old indices 
+    refs_df = refs_df[refs_df.columns[1:]]
+    # Remove the old indexes
+    refs_df = refs_df.reset_index(drop=True)
 else:
     print('Need to add functionality to create references file.')
 
