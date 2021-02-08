@@ -99,18 +99,29 @@ if howadd == 0:
                     bibnotes_df = tempnotes_df
         else:
              print(biben + ' entry does not exist in references database.')
+else: 
+    biben = input("What is the bibtex key?: ")
+    # Get all of the references information from the ref.csv
+    cross_df = refs_df[refs_df['BibTexKey'] == biben]
+    if not cross_df.empty:
+        # Store all the current notes for the bibtex key
+        cat = input("Enter the category: ")
+        notes = input("Add your notes: ")
+        quote = input("Add a quote: ")
 
-# # Create the new mood in a dataframe 
-# mood_dfnew = pd.DataFrame({'Moods': [current_mood]})    
-# # Append the data frame with the new data
-# mood_df = mood_df.append(mood_dfnew, ignore_index=True)
-# # Sort the moods alphabetically 
-# mood_df = mood_df.sort_values(by=['Moods'])
-# # Remove the old indexes
-# mood_df = mood_df.reset_index(drop=True)
-# # Export the csv file 
-# mood_df.to_csv(r'moods.csv')  
-# Add many paper to categories 
-# Add notes to paper 
-# Browse through cateogires
-# Make references .bib file its own function 
+        # Add entry to df
+        d = {'DateAdded': [current_date], 'BibTexKey': [biben],
+         'Title': cross_df['Title'], 'Year':cross_df['Year'], 
+         'FirstAuthor': cross_df['FirstAuthor'], 'Category': [cat],
+         'Notes':[notes], 'Quote':[quote]}
+        tempnotes_df = pd.DataFrame(data=d)
+        
+        if "bibnotes_df" in locals():
+            # Add entry to df 
+            bibnotes_df = bibnotes_df.append(tempnotes_df, ignore_index = True)
+        else:
+            bibnotes_df = tempnotes_df
+
+# Save the references notes to csv. 
+if "bibnotes_df" in locals():
+    bibnotes_df.to_csv(r'bibnotes.csv')
