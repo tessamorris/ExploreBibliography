@@ -130,6 +130,9 @@ else:
         else:
             bibnotes_df = tempnotes_df
 
-# Save the references notes to csv. 
+# Save the references notes to csv after removing any duplicates
 if "bibnotes_df" in locals():
-    bibnotes_df.to_csv(r'bibnotes.csv')
+    # Remove duplicates 
+    cleanbibnotes_df = bibnotes_df.drop_duplicates(subset=['BibTexKey', 'Category', 'Notes','Quote'])
+    # Export the clean version 
+    cleanbibnotes_df.to_csv(r'bibnotes.csv')
