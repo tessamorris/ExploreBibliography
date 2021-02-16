@@ -11,25 +11,53 @@ def checkFileExistence(file):
     return output_exists
 
 # Ask for a numerical input 
-def askIntegerInput(inputstr,maxval):
+def askDfInput(inputstr,inputdf,colname):
+    # Display the dataframe
+    print(inputdf)
+    # Set the max value to the length of the dataframe 
+    maxval = len(inputdf)
     # Initialize a boolean statemennt 
     enteredinput = False
     while not enteredinput:
         # Ask the user the question 
-        int_input = input(inputstr + ": ")
-        # Create a boolean statement to check if the input was a number or not 
-        is_integer = True 
-        # Check if the current input is a number or not 
-        try:
-           val = int(int_input)
-        except ValueError:
-            is_integer = False
-
-        if is_integer:
-            ansval = int(int_input)
-            if ansval >= 0 and ansval <= maxval:
-                return ansval 
+        ans_input = input(inputstr + ": ")
+        # Check if the answer occurs in the dataframe 
+        ans_df = inputdf[inputdf[colname] == ans_input]
+        # Initialize boolean statement to check for an integer answer
+        checkInt = False 
+        if ans_df.empty: 
+            # If the answer does not occur in the dataframe check if it is an integer value 
+            checkInt = True 
+        else: 
+            # Get the number of answers 
+            num_ans = len(ans_df)
+            # If there is only one match then return the answer  
+            if num_ans == 1: 
+                finalans_intermediate = ans_df.tolist()
+                finalans = finalans_intermediate[0]
+                return finalans
                 enteredinput = True 
+            else:
+                checkInt = True 
+
+        if checkInt: 
+            # Create a boolean statement to check if the input was a number or not 
+            is_integer = True 
+            # Check if the current input is a number or not 
+            try:
+               val = int(ans_input)
+            except ValueError:
+                is_integer = False
+            # If the entry is an integer of the correct size, output the results 
+            if is_integer:
+                ansval = int(ans_input)
+                if ansval >= 0 and ansval <= maxval:
+                    finalans = inputdf[colname].iloc[ansval]
+                    return finalans 
+                    enteredinput = True 
+
+
+
 
 # Check the existance of a literature notes file summary
 bibnotesfile = "bibnotes.csv"
@@ -41,8 +69,11 @@ if bibnotes_exist:
     # Remove the old indexes
     bibnotes_df = bibnotes_df.reset_index(drop=True)
     # Ask the user how they would like to explore their data 
-    d = {'Exploration Type': ['See All', 'See Category']}
+    howexplore_col = 'Exploration Type'
+    howexplore_opts = ['All', 'Category']
+    d = {howexplore_col: howexplore_opts}
     howexplore_df = pd.DataFrame(data=d)
-    print(howexplore_df)
-    ansval = askIntegerInput("Enter how you would like to explore your data (Enter the number)", len(howexplore_df))
-    print(howexplore_df['Exploration Type'].iloc[ansval])
+    howexplore_str = "Enter how you would like to explore your data? (Enter the number or string)"
+    howexp = askDfInput(howexplore_str,howexplore_df,howexplore_col)
+
+    print(howexp) 
