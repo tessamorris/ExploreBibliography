@@ -134,7 +134,7 @@ else:
 if "bibnotes_df" in locals():
     # Remove duplicates 
     cleanbibnotes_df = bibnotes_df.drop_duplicates(subset=['BibTexKey', 'Category', 'Notes','Quote'])
-    # Remove the old indexes
-    cleanbibnotes_df = cleanbibnotes_df.reset_index(drop=True)
+    # Remove the old indexes and sort by the bib tex key 
+    cleanbibnotes_df = cleanbibnotes_df.sort_values(by=['BibTexKey']).reset_index(drop=True)
     # Export the clean version 
     cleanbibnotes_df.to_csv(r'bibnotes.csv')
