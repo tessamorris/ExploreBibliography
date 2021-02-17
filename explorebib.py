@@ -1,5 +1,6 @@
 # Packages to Import 
 import pandas as pd # install pandas
+from pandas import DataFrame
 import os.path
 from os import path
 
@@ -128,13 +129,16 @@ if bibnotes_exist:
                 for ni in quote_df:
                     print(spcstr + ni)
     elif howexp == 'Category':
-        print('Category')
         bibnotes_df = bibnotes_df.sort_values(by=['Category'])
         ucategories_all = bibnotes_df['Category'].dropna().unique().tolist()
-        print(ucategories_all)
-        ucategories_df = pd.DataFrame[ucategories_all]
+        ucategories_df = DataFrame(ucategories_all, columns=['Category'])
+        catsel = askDfInput('Select a category', ucategories_df, 'Category')
+        bibnotes_catdf = bibnotes_df[bibnotes_df['Category'] == catsel]
+        bibnotes_catdf = bibnotes_catdf.sort_values(by=['BibTexKey']).reset_index(drop=True)
+        print(bibnotes_catdf)
+
     elif howexp == 'Keywords':
-        print('Keywords')
+        print('Keywords to be implemented')
             # if notes_all:
             #     notestr = spcstr + "Notes:"
             #     notestr_org = notestr
