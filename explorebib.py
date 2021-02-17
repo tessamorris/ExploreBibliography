@@ -129,9 +129,10 @@ if bibnotes_exist:
                     print(spcstr + ni)
     elif howexp == 'Category':
         print('Category')
-        #bibnotes_df = bibnotes_df.sort_values(by=['Category'])
-        #ucategories_df = bibnotes_df['Category'].dropna().unique()
-        #catint = askDfInput('Select the Category',ucategories_df,'Category')
+        bibnotes_df = bibnotes_df.sort_values(by=['Category'])
+        ucategories_all = bibnotes_df['Category'].dropna().unique().tolist()
+        print(ucategories_all)
+        ucategories_df = pd.DataFrame[ucategories_all]
     elif howexp == 'Keywords':
         print('Keywords')
             # if notes_all:
