@@ -135,7 +135,10 @@ if bibnotes_exist:
         catsel = askDfInput('Select a category', ucategories_df, 'Category')
         bibnotes_catdf = bibnotes_df[bibnotes_df['Category'] == catsel]
         bibnotes_catdf = bibnotes_catdf.sort_values(by=['BibTexKey']).reset_index(drop=True)
-        print(bibnotes_catdf)
+        print(bibnotes_catdf['BibTexKey'])
+        namesv = input('Enter the desired name of the csv file (include .csv): ')
+        if namesv:
+            bibnotes_catdf.to_csv(namesv)
 
     elif howexp == 'Keywords':
         print('Keywords to be implemented')
