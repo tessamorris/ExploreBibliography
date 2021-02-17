@@ -57,7 +57,20 @@ def askDfInput(inputstr,inputdf,colname):
                     enteredinput = True 
 
 
-
+# Checks if a data file exists. If it doesn't exist it will create it 
+def list2string(lst):
+    if lst:
+        fcnt = 0 
+        for ni in lst:
+            if str(ni) != 'nan':
+                if fcnt == 0: 
+                    lststr = ni
+                else: 
+                    lststr = lststr + " " + ni
+                fcnt = fcnt + 1 
+    else:
+        lststr = 'nan'
+    return lststr
 
 # Check the existance of a literature notes file summary
 bibnotesfile = "bibnotes.csv"
@@ -70,10 +83,55 @@ if bibnotes_exist:
     bibnotes_df = bibnotes_df.reset_index(drop=True)
     # Ask the user how they would like to explore their data 
     howexplore_col = 'Exploration Type'
-    howexplore_opts = ['All', 'Category']
+    howexplore_opts = ['All', 'Category', 'Keywords']
     d = {howexplore_col: howexplore_opts}
     howexplore_df = pd.DataFrame(data=d)
     howexplore_str = "Enter how you would like to explore your data? (Enter the number or string)"
     howexp = askDfInput(howexplore_str,howexplore_df,howexplore_col)
 
-    print(howexp) 
+    # Spacing between entries 
+    sepstr = "----------------------------------------------------------------"
+    spcstr = '    '
+    if howexp == 'All':
+        # Sort alphabetically by bibtexkey
+        bibnotes_df = bibnotes_df.sort_values(by=['BibTexKey'])
+        # Get unique bibtexkeys, convert it to a list and then sort 
+        ubibkeys = bibnotes_df['BibTexKey'].unique()
+        for bi in ubibkeys:
+            print(sepstr)
+            currentbib_df = bibnotes_df[bibnotes_df['BibTexKey'] == bi]
+
+            # Get the title 
+            title_all = currentbib_df['Title'].unique().tolist()
+            title_str = title_all[0]
+            print( bi + ": " + title_str)
+
+            # Get the categories 
+            category_all = currentbib_df['Category'].unique().tolist()
+            if category_all:
+                catstr = spcstr + "Categories:"
+                catstr_org = catstr
+                for ci in category_all:
+                    if str(ci) != 'nan':
+                        catstr = catstr + " " + ci
+                if catstr_org != catstr:
+                    print(catstr)
+
+            # Get the notes 
+            notes_all = currentbib_df['Notes'].tolist()
+            if notes_all:
+                notestr = spcstr + "Notes:"
+                notestr_org = notestr
+                for ni in notes_all:
+                    if str(ni) != 'nan':
+                        catstr = catstr + " " + ci
+                if catstr_org != catstr:
+                    print(catstr)
+
+
+            # Get the quotes 
+        # Sort by bibtex key 
+        # Display Title (bibtexkey)
+        # Display Categories (only unique)
+        # Display Notes (by date)
+        # Display Quotes (by date)
