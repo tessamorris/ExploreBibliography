@@ -98,7 +98,9 @@ if bibnotes_exist:
         # Get unique bibtexkeys, convert it to a list and then sort 
         ubibkeys = bibnotes_df['BibTexKey'].unique()
         for bi in ubibkeys:
+            print(spcstr)
             print(sepstr)
+            print(spcstr)
             currentbib_df = bibnotes_df[bibnotes_df['BibTexKey'] == bi]
 
             # Get the title 
@@ -107,26 +109,32 @@ if bibnotes_exist:
             print( bi + ": " + title_str)
 
             # Get the categories 
-            category_all = currentbib_df['Category'].unique().tolist()
-            if category_all:
-                catstr = spcstr + "Categories:"
-                catstr_org = catstr
-                for ci in category_all:
-                    if str(ci) != 'nan':
-                        catstr = catstr + " " + ci
-                if catstr_org != catstr:
-                    print(catstr)
+            category_all = currentbib_df['Category'].dropna().unique().tolist()
+            catstr = list2string(category_all)
+            if str(catstr) != 'nan':
+                print("Categories: " + catstr)
 
             # Get the notes 
-            notes_all = currentbib_df['Notes'].tolist()
-            if notes_all:
-                notestr = spcstr + "Notes:"
-                notestr_org = notestr
-                for ni in notes_all:
-                    if str(ni) != 'nan':
-                        catstr = catstr + " " + ci
-                if catstr_org != catstr:
-                    print(catstr)
+            notes_df = currentbib_df['Notes'].dropna()
+            if not notes_df.empty:
+                print("Notes:")
+                for ni in notes_df:
+                    print(spcstr + ni)
+
+            # Get the quotes
+            quote_df = currentbib_df['Quote'].dropna()
+            if not quote_df.empty:
+                print("Quotes:")
+                for ni in quote_df:
+                    print(spcstr + ni)
+            # if notes_all:
+            #     notestr = spcstr + "Notes:"
+            #     notestr_org = notestr
+            #     for ni in notes_all:
+            #         if str(ni) != 'nan':
+            #             catstr = catstr + " " + ci
+            #     if catstr_org != catstr:
+            #         print(catstr)
 
 
             # Get the quotes 
