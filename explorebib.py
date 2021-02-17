@@ -127,6 +127,13 @@ if bibnotes_exist:
                 print("Quotes:")
                 for ni in quote_df:
                     print(spcstr + ni)
+    elif howexp == 'Category':
+        print('Category')
+        #bibnotes_df = bibnotes_df.sort_values(by=['Category'])
+        #ucategories_df = bibnotes_df['Category'].dropna().unique()
+        #catint = askDfInput('Select the Category',ucategories_df,'Category')
+    elif howexp == 'Keywords':
+        print('Keywords')
             # if notes_all:
             #     notestr = spcstr + "Notes:"
             #     notestr_org = notestr
@@ -142,4 +149,4 @@ if bibnotes_exist:
         # Display Title (bibtexkey)
         # Display Categories (only unique)
         # Display Notes (by date)
-        # Display Quotes (by date)
+        # Display Quotes (by date
